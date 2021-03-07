@@ -20,6 +20,7 @@
 #include "Extensions/EditorTheme.hpp"
 #include "Settings/SettingsManager.hpp"
 #include "generated/SettingsHelper.hpp"
+#include "third_party/FakeVim/fakevim/fakevimactions.h"
 #include <QCXXHighlighter>
 #include <QCodeEditor>
 #include <QJavaHighlighter>
@@ -31,20 +32,14 @@ void applySettingsToEditor(QCodeEditor *editor, const QString &language)
 {
     LOG_INFO("Applying settings to QCodeEditor");
 
-    editor->setTabReplace(SettingsHelper::isReplaceTabs());
-    editor->setTabReplaceSize(SettingsHelper::getTabWidth());
-    editor->setAutoIndentation(SettingsHelper::isAutoIndent());
-
     editor->setFont(SettingsHelper::getEditorFont());
-
-    const int tabStop = SettingsHelper::getTabWidth();
-    QFontMetrics metric(editor->font());
-    editor->setTabReplaceSize(tabStop);
 
     if (SettingsHelper::isWrapText())
         editor->setWordWrapMode(QTextOption::WordWrap);
     else
         editor->setWordWrapMode(QTextOption::NoWrap);
+
+    editor->setHighlightCurrentLine(SettingsHelper::isHighlightCurrentLine());
 
     auto *style = Extensions::EditorTheme::query(SettingsHelper::getEditorTheme());
     if (!style)
@@ -71,6 +66,9 @@ void applySettingsToEditor(QCodeEditor *editor, const QString &language)
         editor->setHighlighter(new QCXXHighlighter);
         editor->setCompleter(nullptr);
     }
+
+    if (editor->vimCursor())
+        return;
 
     QVector<QCodeEditor::Parenthesis> parentheses;
 
@@ -110,5 +108,13 @@ void applySettingsToEditor(QCodeEditor *editor, const QString &language)
     }
 
     editor->setParentheses(parentheses);
+
+    editor->setTabReplace(SettingsHelper::isReplaceTabs());
+    editor->setAutoIndentation(SettingsHelper::isAutoIndent());
+
+    const int tabStop = SettingsHelper::getTabWidth();
+    QFontMetrics metric(editor->font());
+    editor->setTabReplaceSize(tabStop);
 }
+
 } // namespace Util

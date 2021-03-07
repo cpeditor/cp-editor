@@ -1,6 +1,7 @@
 [submodule "third_party/QCodeEditor"]
 	path = third_party/QCodeEditor
 	url = https://github.com/cpeditor/QCodeEditor
+	branch = add-vim-cursor
 [submodule "third_party/singleapplication"]
 	path = third_party/singleapplication
 	url = https://github.com/itay-grudev/SingleApplication.git
@@ -13,6 +14,9 @@
 [submodule "third_party/testlib"]
 	path = third_party/testlib
 	url = https://github.com/MikeMirzayanov/testlib
+[submodule "third_party/FakeVim"]
+	path = third_party/FakeVim
+	url = https://github.com/cpeditor/FakeVim
 [submodule "third_party/qhttp"]
 	path = third_party/qhttp
 	url = https://github.com/cpeditor/qhttp

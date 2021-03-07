@@ -834,6 +834,37 @@ Press any key to exit</source>
     </message>
 </context>
 <context>
+    <name>FakeVimCommand</name>
+    <message>
+        <source>`new` requires no argument or one of &apos;cpp&apos;, &apos;java&apos; and &apos;python&apos;, got [%1]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>[%1] is not C++, Python or Java source file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>[%1] does not exist. To open a tab with a non-existing file, use `open!` instead</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>[%1] is not a number</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 is out of range [1, %2]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>[%1] is not a valid view mode. It should be one of &apos;split&apos; and &apos;edit&apos;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 is not a valid language name. It should be one of &apos;cpp&apos;, &apos;java&apos; and &apos;python&apos;</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>FindReplaceDialog</name>
     <message>
         <source>Find/Replace</source>
@@ -1124,10 +1155,6 @@ Do you want to reload it?</source>
         <translation></translation>
     </message>
     <message>
-        <source>cursor info</source>
-        <translation>光标信息</translation>
-    </message>
-    <message>
         <source>Compile</source>
         <translation>编译</translation>
     </message>
@@ -1239,12 +1266,6 @@ Do you want to reload it?</source>
         <translation>括号对：%1</translation>
     </message>
     <message>
-        <source>Enable %1 for %2 in %3.
-If it&apos;s partially checked, the global setting in Code Edit will be used.</source>
-        <translation>在 %3 中为括号对 %2 启用 %1。
-如果复选框被部分选择，则会使用全局设置。</translation>
-    </message>
-    <message>
         <source>Auto Complete</source>
         <translation>自动补全</translation>
     </message>
@@ -1255,6 +1276,11 @@ If it&apos;s partially checked, the global setting in Code Edit will be used.</s
     <message>
         <source>Tab Jump Out</source>
         <translation>按 Tab 键跳出</translation>
+    </message>
+    <message>
+        <source>Enable %1 for %2 in %3.
+If it&apos;s partially checked, the global setting in Code Editing will be used.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1363,10 +1389,6 @@ If it&apos;s partially checked, the global setting in Code Edit will be used.</s
     <message>
         <source>Go to the home page</source>
         <translation>回到主页</translation>
-    </message>
-    <message>
-        <source>Code Edit</source>
-        <translation>代码编辑</translation>
     </message>
     <message>
         <source>Language</source>
@@ -1503,6 +1525,10 @@ If it&apos;s partially checked, the global setting in Code Edit will be used.</s
     <message>
         <source>Font</source>
         <translation>字体</translation>
+    </message>
+    <message>
+        <source>Code Editing</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>YAPF</source>
@@ -2487,6 +2513,27 @@ The program will be killed if it doesn&apos;t terminate in the time limit.</sour
         <translation>为对应的标签页使用由 Competitive Companion 解析得到的时间限制。</translation>
     </message>
     <message>
+        <source>Enable vim Emulation in Code Editor</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enable Vim Emulation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Vim Configuration</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The contents of Vim RC. It is loaded everytime vim emulation starts. 
+Not all vim commands are supported, please check https://github.com/cpeditor/FakeVim for list of supported commands</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Highlight Current Line</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Show Only Monospaced Font</source>
         <translation>仅显示等宽字体</translation>
     </message>
@@ -2510,6 +2557,11 @@ The program will be killed if it doesn&apos;t terminate in the time limit.</sour
         <source>The maximum number of characters in a test case to be displayed.
 A test case will be elided and read-only if it&apos;s too long.</source>
         <translation>会显示出来的测试用例的最大字符数。如果测试用例过长，超长部分会被省略，且测试用例会变得只读。</translation>
+    </message>
+    <message>
+        <source>Highlight the line where cursor exists.
+In, vim emulation current line is never highlighed</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Clang Format Program</source>

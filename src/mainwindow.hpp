@@ -27,6 +27,7 @@ class QFileSystemWatcher;
 class QPushButton;
 class QSplitter;
 class QTemporaryDir;
+class AppWindow;
 
 QT_BEGIN_NAMESPACE namespace Ui
 {
@@ -39,6 +40,7 @@ namespace Core
 class Checker;
 class Compiler;
 class Runner;
+class FakeVimCommand;
 } // namespace Core
 
 namespace Extensions
@@ -51,6 +53,13 @@ namespace Widgets
 {
 class TestCases;
 }
+namespace FakeVim
+{
+namespace Internal
+{
+class FakeVimHandler;
+}
+} // namespace FakeVim
 
 class MainWindow : public QMainWindow
 {
@@ -222,6 +231,7 @@ class MainWindow : public QMainWindow
 
     QPushButton *submitToCodeforces = nullptr;
     Extensions::CFTool *cftool = nullptr;
+    FakeVim::Internal::FakeVimHandler *fakevimHandler = nullptr;
 
     Widgets::TestCases *testcases = nullptr;
 
@@ -247,5 +257,6 @@ class MainWindow : public QMainWindow
     QString compileCommand() const;
     int timeLimit() const;
     void updateCompileAndRunButtons() const;
+    friend class Core::FakeVimCommand;
 };
 #endif // MAINWINDOW_HPP

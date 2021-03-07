@@ -834,6 +834,37 @@ Press any key to exit</source>
     </message>
 </context>
 <context>
+    <name>FakeVimCommand</name>
+    <message>
+        <source>`new` requires no argument or one of &apos;cpp&apos;, &apos;java&apos; and &apos;python&apos;, got [%1]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>[%1] is not C++, Python or Java source file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>[%1] does not exist. To open a tab with a non-existing file, use `open!` instead</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>[%1] is not a number</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 is out of range [1, %2]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>[%1] is not a valid view mode. It should be one of &apos;split&apos; and &apos;edit&apos;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 is not a valid language name. It should be one of &apos;cpp&apos;, &apos;java&apos; and &apos;python&apos;</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>FindReplaceDialog</name>
     <message>
         <source>Find/Replace</source>
@@ -1124,10 +1155,6 @@ Do you want to reload it?</source>
         <translation>CP Editor</translation>
     </message>
     <message>
-        <source>cursor info</source>
-        <translation>информация с курсора</translation>
-    </message>
-    <message>
         <source>Compile</source>
         <translation>Скомпилировать</translation>
     </message>
@@ -1239,12 +1266,6 @@ Do you want to reload it?</source>
         <translation>Скобки: %1</translation>
     </message>
     <message>
-        <source>Enable %1 for %2 in %3.
-If it&apos;s partially checked, the global setting in Code Edit will be used.</source>
-        <translation>Активировано %1 для %2 в %3.
-Выбрано частично, будут использованы глобальные настройки в Code Edit.</translation>
-    </message>
-    <message>
         <source>Auto Complete</source>
         <translation>Автозавершение</translation>
     </message>
@@ -1255,6 +1276,12 @@ If it&apos;s partially checked, the global setting in Code Edit will be used.</s
     <message>
         <source>Tab Jump Out</source>
         <translation>Tab Jump Out</translation>
+    </message>
+    <message>
+        <source>Enable %1 for %2 in %3.
+If it&apos;s partially checked, the global setting in Code Editing will be used.</source>
+        <translation>Активировано %1 для %2 в %3.
+Выбрано частично, будут использованы глобальные настройки в Code Editing.</translation>
     </message>
 </context>
 <context>
@@ -1363,10 +1390,6 @@ If it&apos;s partially checked, the global setting in Code Edit will be used.</s
     <message>
         <source>Go to the home page</source>
         <translation>Назад на основную страницу</translation>
-    </message>
-    <message>
-        <source>Code Edit</source>
-        <translation>Редактирование кода</translation>
     </message>
     <message>
         <source>Language</source>
@@ -1503,6 +1526,10 @@ If it&apos;s partially checked, the global setting in Code Edit will be used.</s
     <message>
         <source>Font</source>
         <translation>Шрифт</translation>
+    </message>
+    <message>
+        <source>Code Editing</source>
+        <translation>Редактирование кода</translation>
     </message>
     <message>
         <source>YAPF</source>
@@ -2494,6 +2521,28 @@ The program will be killed if it doesn&apos;t terminate in the time limit.</sour
         <translation>Использовать лимит времени взятым Competitive Companion-ом как лимит времени соответствующей вкладки.</translation>
     </message>
     <message>
+        <source>Enable vim Emulation in Code Editor</source>
+        <translation>Включить эмуляцию vim в Редакторе кода</translation>
+    </message>
+    <message>
+        <source>Enable Vim Emulation</source>
+        <translation>Включить эмуляцию Vim</translation>
+    </message>
+    <message>
+        <source>Vim Configuration</source>
+        <translation>Настройки Vim</translation>
+    </message>
+    <message>
+        <source>The contents of Vim RC. It is loaded everytime vim emulation starts. 
+Not all vim commands are supported, please check https://github.com/cpeditor/FakeVim for list of supported commands</source>
+        <translation>Содержание Vim RC. Оно загружается каждый раз, когда эмуляция vim запускается.
+Не все комманды vim поддерживаются, пожалуйста просетите https://github.com/cpeditor/FakeVim for list of supported commands</translation>
+    </message>
+    <message>
+        <source>Highlight Current Line</source>
+        <translation>Подстветка текущей линии</translation>
+    </message>
+    <message>
         <source>Show Only Monospaced Font</source>
         <translation>Показывать только моноширинный шрифт</translation>
     </message>
@@ -2518,6 +2567,11 @@ The program will be killed if it doesn&apos;t terminate in the time limit.</sour
 A test case will be elided and read-only if it&apos;s too long.</source>
         <translation>Максимальное отображаемое число символов в тесткейсе.
 Если тесткейс будет слишком большой, он будет пропущен и доступен только для чтения.</translation>
+    </message>
+    <message>
+        <source>Highlight the line where cursor exists.
+In, vim emulation current line is never highlighed</source>
+        <translation>Подсвечивать линию, где находится курсор. В эмуляторе vim текущая линия никогда не подсвечивается</translation>
     </message>
     <message>
         <source>Clang Format Program</source>

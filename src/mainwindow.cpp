@@ -16,10 +16,10 @@
  */
 
 #include "mainwindow.hpp"
-
 #include "Core/Checker.hpp"
 #include "Core/Compiler.hpp"
 #include "Core/EventLogger.hpp"
+#include "Core/FakeVimProxy.hpp"
 #include "Core/MessageLogger.hpp"
 #include "Core/Runner.hpp"
 #include "Extensions/CFTool.hpp"
@@ -109,12 +109,21 @@ MainWindow::~MainWindow()
     delete testcases;
     delete fileWatcher;
     delete editor;
+
+    if (fakevimHandler)
+    {
+        fakevimHandler->disconnectFromEditor();
+        fakevimHandler->deleteLater();
+        fakevimHandler = nullptr;
+    }
+
     delete log;
 }
 
 void MainWindow::setEditor()
 {
     editor = new QCodeEditor();
+
     editor->setSizePolicy(QSizePolicy::Policy::Expanding, QSizePolicy::Policy::Expanding);
     editor->setAcceptDrops(false);
 
@@ -594,9 +603,31 @@ void MainWindow::applySettings(const QString &pagePath)
         }
     }
 
-    if (pageChanged("Code Edit") || pagePath.startsWith("Appearance/") ||
+    if (pageChanged("Code Editing") || pagePath.startsWith("Appearance/") ||
         pageChanged(QString("Language/%1/%1 Parentheses").arg(language)))
+    {
+        if (pageChanged("Code Editing"))
+        {
+            editor->setVimCursor(SettingsHelper::isFakeVimEnable());
+            ui->cursorInfo->setVisible(!SettingsHelper::isFakeVimEnable());
+
+            delete fakevimHandler;
+            fakevimHandler = nullptr;
+            setStatusBar(nullptr);
+
+            if (SettingsHelper::isFakeVimEnable())
+            {
+                fakevimHandler = new FakeVim::Internal::FakeVimHandler(editor, nullptr);
+
+                Core::FakeVimProxy::connectSignals(fakevimHandler, editor, this, appWindow);
+                Core::FakeVimProxy::initHandler(fakevimHandler);
+                Core::FakeVimProxy::sourceVimRc(fakevimHandler);
+            }
+            Core::FakeVimProxy::clearUndoRedo(editor);
+        }
+
         Util::applySettingsToEditor(editor, language);
+    }
 
     if (!isLanguageSet && pageChanged("Language/General"))
     {
