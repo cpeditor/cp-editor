@@ -23,7 +23,7 @@ find_package(Qt5 COMPONENTS Core REQUIRED)
 find_package(Qt5 COMPONENTS Widgets REQUIRED)
 find_package(Qt5 COMPONENTS Network REQUIRED)
 find_package(Qt5 COMPONENTS LinguistTools REQUIRED)
-find_package(Python3 COMPONENTS Interpreter REQUIRED)
+find_package(yaml-cpp REQUIRED)
 
 add_subdirectory(third_party/QCodeEditor)
 
@@ -104,10 +104,14 @@ configure_file(cmake/version.hpp.in ${CMAKE_BINARY_DIR}/generated/version.hpp)
 configure_file(cmake/portable.hpp.in ${CMAKE_BINARY_DIR}/generated/portable.hpp)
 configure_file(cmake/cpeditor.appdata.xml.in ${PROJECT_SOURCE_DIR}/dist/linux/cpeditor.appdata.xml)
 
-add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/generated/SettingsHelper.hpp ${CMAKE_BINARY_DIR}/generated/SettingsInfo.cpp
-                   COMMAND ${Python3_EXECUTABLE} ${PROJECT_SOURCE_DIR}/src/Settings/genSettings.py ${PROJECT_SOURCE_DIR}/src/Settings/settings.json
+add_executable(gen_settings src/Settings/genSettings.cpp)
+
+target_link_libraries(gen_settings PRIVATE yaml-cpp)
+
+add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/generated/SettingsHelper.hpp ${CMAKE_BINARY_DIR}/generated/SettingsInfo.cpp ${CMAKE_BINARY_DIR}/generated/PreferencesWindow.cpp
+                   COMMAND gen_settings ${PROJECT_SOURCE_DIR}/src/Settings/settings.yaml
                    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-                   DEPENDS ${PROJECT_SOURCE_DIR}/src/Settings/settings.json ${PROJECT_SOURCE_DIR}/src/Settings/genSettings.py)
+                   DEPENDS ${PROJECT_SOURCE_DIR}/src/Settings/settings.yaml gen_settings)
 
 set(TSS ${CMAKE_SOURCE_DIR}/translations/zh_CN.ts ${CMAKE_SOURCE_DIR}/translations/ru_RU.ts)
 
@@ -117,7 +121,7 @@ qt5_add_translation(QMFILES ${TSS})
 
 file(COPY ${CMAKE_SOURCE_DIR}/translations/translations.qrc DESTINATION ${CMAKE_BINARY_DIR}/translations)
 
-set_property(SOURCE ${CMAKE_BINARY_DIR}/generated/SettingsHelper.hpp ${CMAKE_BINARY_DIR}/generated/SettingsInfo.cpp PROPERTY SKIP_AUTOGEN ON)
+set_property(SOURCE ${CMAKE_BINARY_DIR}/generated/SettingsHelper.hpp ${CMAKE_BINARY_DIR}/generated/SettingsInfo.cpp ${CMAKE_BINARY_DIR}/generated/PreferencesWindow.cpp PROPERTY SKIP_AUTOGEN ON)
 
 if(USE_CLANG_TIDY)
 	set(CMAKE_CXX_CLANG_TIDY "clang-tidy")
@@ -130,6 +134,23 @@ if(APPLE)
 endif()
 if(WIN32)
   list(APPEND RESOURCES ${CMAKE_BINARY_DIR}/generated/version.rc)
+endif()
+
+add_library(
+    target_generated
+    OBJECT
+    src/Settings/SettingsInfo.hpp
+    ${CMAKE_BINARY_DIR}/generated/SettingsInfo.cpp
+)
+
+target_link_libraries(target_generated PRIVATE Qt5::Widgets)
+
+if(USE_CLANG_TIDY)
+  set_target_properties(
+    target_generated
+    PROPERTIES
+        CXX_CLANG_TIDY ""
+  )
 endif()
 
 add_executable(cpeditor
@@ -169,38 +190,36 @@ add_executable(cpeditor
     src/Extensions/LanguageServer.cpp
     src/Extensions/LanguageServer.hpp
 
-    src/Settings/CodeSnippetsPage.cpp
-    src/Settings/CodeSnippetsPage.hpp
     src/Settings/DefaultPathManager.cpp
     src/Settings/DefaultPathManager.hpp
     src/Settings/FileProblemBinder.cpp
     src/Settings/FileProblemBinder.hpp
     src/Settings/FontItem.cpp
     src/Settings/FontItem.hpp
-    src/Settings/ParenthesesPage.cpp
-    src/Settings/ParenthesesPage.hpp
     src/Settings/PathItem.cpp
     src/Settings/PathItem.hpp
-    src/Settings/PreferencesGridPage.cpp
-    src/Settings/PreferencesGridPage.hpp
     src/Settings/PreferencesHomePage.cpp
     src/Settings/PreferencesHomePage.hpp
     src/Settings/PreferencesPage.cpp
     src/Settings/PreferencesPage.hpp
-    src/Settings/PreferencesPageTemplate.cpp
-    src/Settings/PreferencesPageTemplate.hpp
+    src/Settings/PreferencesTemplate.cpp
+    src/Settings/PreferencesTemplate.hpp
     src/Settings/PreferencesWindow.cpp
     src/Settings/PreferencesWindow.hpp
     src/Settings/SettingsManager.cpp
     src/Settings/SettingsManager.hpp
+    src/Settings/SettingsMethods.cpp
+    src/Settings/SettingsMethods.hpp
     src/Settings/SettingsUpdater.cpp
     src/Settings/SettingsUpdater.hpp
     src/Settings/ShortcutItem.cpp
     src/Settings/ShortcutItem.hpp
     src/Settings/StringListsItem.cpp
     src/Settings/StringListsItem.hpp
-    src/Settings/ValueWrapper.cpp
-    src/Settings/ValueWrapper.hpp
+    src/Settings/SettingsInfo.cpp
+
+    src/Settings/SettingWidget.cpp
+    src/Settings/SettingWidget.hpp
 
     src/Telemetry/UpdateChecker.cpp
     src/Telemetry/UpdateChecker.hpp
@@ -247,13 +266,14 @@ add_executable(cpeditor
     ui/mainwindow.ui
     ui/appwindow.ui
 
+    src/Settings/SettingsInfo.hpp
     ${CMAKE_BINARY_DIR}/generated/version.hpp
     ${CMAKE_BINARY_DIR}/generated/SettingsHelper.hpp
-    src/Settings/SettingsInfo.hpp
-    ${CMAKE_BINARY_DIR}/generated/SettingsInfo.cpp
-
+    ${CMAKE_BINARY_DIR}/generated/PreferencesWindow.cpp
+    $<TARGET_OBJECTS:target_generated>
     ${CMAKE_BINARY_DIR}/translations/translations.qrc
     ${RESOURCES}
+    
     assets/appicon.rc)
 
 include_directories("generated/")
@@ -266,10 +286,12 @@ target_link_libraries(cpeditor PRIVATE Qt5::Widgets)
 target_link_libraries(cpeditor PRIVATE QtFindReplaceDialog)
 target_link_libraries(cpeditor PRIVATE SingleApplication)
 target_link_libraries(cpeditor PRIVATE QHttp)
+target_link_libraries(cpeditor PRIVATE yaml-cpp)
 target_link_libraries(diff_match_patch PRIVATE Qt5::Core)
 target_link_libraries(cpeditor PRIVATE diff_match_patch)
 
 if(MSVC)
+  target_compile_options(target_generated PUBLIC "/utf-8")
   target_compile_options(cpeditor PUBLIC "/utf-8")
 endif(MSVC)
 

@@ -303,9 +303,9 @@ void AppWindow::allocate()
     findReplaceDialog->setWindowFlags(Qt::Dialog | Qt::WindowMinimizeButtonHint | Qt::WindowMaximizeButtonHint |
                                       Qt::WindowCloseButtonHint);
 
-    lspTimerCpp->setInterval(SettingsHelper::getLSPDelayCpp());
-    lspTimerJava->setInterval(SettingsHelper::getLSPDelayJava());
-    lspTimerPython->setInterval(SettingsHelper::getLSPDelayPython());
+    lspTimerCpp->setInterval(SettingsHelper::getLSP_Cpp().getDelay());
+    lspTimerJava->setInterval(SettingsHelper::getLSP_Java().getDelay());
+    lspTimerPython->setInterval(SettingsHelper::getLSP_Python().getDelay());
 
     trayIconMenu = new QMenu();
     trayIconMenu->addAction(tr("Show Main Window"), this, &AppWindow::showOnTop);
@@ -982,7 +982,7 @@ void AppWindow::onLSPTimerElapsedCpp()
     if (tab == nullptr)
         return;
 
-    if (SettingsHelper::isLSPUseLintingCpp() && tab->getLanguage() == "C++")
+    if (SettingsHelper::getLSP_Cpp().isUseLinting() && tab->getLanguage() == "C++")
         cppServer->requestLinting();
 
     lspTimerCpp->stop();
@@ -994,7 +994,7 @@ void AppWindow::onLSPTimerElapsedJava()
     if (tab == nullptr)
         return;
 
-    if (SettingsHelper::isLSPUseLintingJava() && tab->getLanguage() == "Java")
+    if (SettingsHelper::getLSP_Java().isUseLinting() && tab->getLanguage() == "Java")
         javaServer->requestLinting();
 
     lspTimerJava->stop();
@@ -1006,7 +1006,7 @@ void AppWindow::onLSPTimerElapsedPython()
     if (tab == nullptr)
         return;
 
-    if (SettingsHelper::isLSPUseLintingPython() && tab->getLanguage() == "Python")
+    if (SettingsHelper::getLSP_Python().isUseLinting() && tab->getLanguage() == "Python")
         pythonServer->requestLinting();
 
     lspTimerPython->stop();
@@ -1053,33 +1053,20 @@ void AppWindow::onSettingsApplied(const QString &pagePath)
             qApp->setFont(QFontDatabase::systemFont(QFontDatabase::GeneralFont));
     }
 
-    if (pageChanged("Extensions/Language Server/C++ Server"))
+    if (pageChanged("Extensions/Language Server"))
     {
         cppServer->updateSettings();
-        lspTimerCpp->setInterval(SettingsHelper::getLSPDelayCpp());
-    }
-
-    if (pageChanged("Extensions/Language Server/Java Server"))
-    {
+        lspTimerCpp->setInterval(SettingsHelper::getLSP_Cpp().getDelay());
         javaServer->updateSettings();
-        lspTimerJava->setInterval(SettingsHelper::getLSPDelayJava());
-    }
-
-    if (pageChanged("Extensions/Language Server/Python Server"))
-    {
+        lspTimerJava->setInterval(SettingsHelper::getLSP_Java().getDelay());
         pythonServer->updateSettings();
-        lspTimerPython->setInterval(SettingsHelper::getLSPDelayPython());
+        lspTimerPython->setInterval(SettingsHelper::getLSP_Python().getDelay());
     }
 
     if (pageChanged("Actions/Save Session"))
     {
         sessionManager->setAutoUpdateDuration(SettingsHelper::getHotExitAutoSaveInterval());
         sessionManager->setAutoUpdateSession(SettingsHelper::isHotExitEnable() && SettingsHelper::isHotExitAutoSave());
-    }
-
-    if (pageChanged("File Path/Default Paths"))
-    {
-        DefaultPathManager::fromVariantList(SettingsHelper::getDefaultPathNamesAndPaths());
     }
 
     SettingsManager::saveSettings(QString());
@@ -1246,7 +1233,7 @@ void AppWindow::on_actionUseSnippets_triggered()
     if (current != nullptr)
     {
         QString lang = current->getLanguage();
-        QStringList names = SettingsHelper::getLanguageConfig(lang).getSnippets();
+        QStringList names = SettingsHelper::getLanguageConfig(lang).querySnippet();
         if (names.isEmpty())
         {
             activeLogger->warn(
@@ -1263,7 +1250,7 @@ void AppWindow::on_actionUseSnippets_triggered()
                 if (names.contains(name))
                 {
                     LOG_INFO("Found snippet and inserted");
-                    QString content = SettingsHelper::getLanguageConfig(lang).getSnippet(name);
+                    QString content = SettingsHelper::getLanguageConfig(lang).getSnippet(name).getCode();
                     current->insertText(content);
                 }
                 else
